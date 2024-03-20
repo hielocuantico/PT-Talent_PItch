@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UsersResource;
 use App\Models\Users;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        $users = Users::all();
+        return UsersResource::collection( $users );
     }
 
     /**
@@ -20,7 +22,10 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate( Users::VALIDATIONS );
+        $user = Users::create( $data );
+        $user->refresh();
+        return UsersResource::make( $user );
     }
 
     /**
